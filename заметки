@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Мои заметки</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="box">
+<h1>📒 Мои заметки</h1>
+<textarea id="text" placeholder="Напиши заметку..."></textarea>
+<br>
+<button onclick="addNote()">Добавить заметку</button>
+<div id="notes"></div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
+
+*body{font-family:Arial;background:#e2f5ff;margin:0;padding:25px}
+.box{max-width:600px;margin:auto;background:white;padding:25px;border-radius:20px}
+h1{text-align:center;color:#2686b5}
+textarea{width:100%;height:100px;box-sizing:border-box;padding:12px;border:1px solid #b6e2f5;border-radius:10px}
+button{padding:10px 15px;background:#8bd4f5;border:0;border-radius:8px;cursor:pointer;margin-top:8px}
+.note{background:#e8f7ff;padding:15px;margin-top:12px;border-radius:10px;overflow-wrap:anywhere}
+
+let notes=JSON.parse(localStorage.getItem('myNotes')||'[]');
+function render(){
+let box=document.getElementById('notes');
+box.replaceChildren();
+notes.forEach((note,i)=>{
+let div=document.createElement('div');
+div.className='note';
+let p=document.createElement('p');
+p.textContent=note;
+let b=document.createElement('button');
+b.textContent='Удалить';
+b.onclick=()=>{notes.splice(i,1);save()};
+div.append(p,b);
+box.append(div);
+});
+}
+function addNote(){
+let input=document.getElementById('text');
+if(!input.value.trim())return;
+notes.unshift(input.value.trim());
+input.value='';
+save();
+}
+function save(){
+localStorage.setItem('myNotes',JSON.stringify(notes));
+render();
+}
+render();
